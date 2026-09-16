@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: ai-orchestrator
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn orchestrator:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GROQ_API_KEY
+        generateValue: false
+      - key: REPLICATE_API_TOKEN
+        generateValue: false
+      - key: RUNWAY_API_KEY
+        generateValue: false
+      - key: LUMA_API_KEY
+        generateValue: false
+      - key: STRIPE_SECRET_KEY
+        generateValue: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        generateValue: false
