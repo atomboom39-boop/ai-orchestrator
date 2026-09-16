@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Orchestrator - Premium Interface</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #e3e3e3;
+            overflow-x: hidden;
+        }
+
+        /* Animated gradient background */
+        .gradient-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg,
+                #667eea 0%,
+                #764ba2 25%,
+                #f093fb 50%,
+                #4facfe 75%,
+                #00f2fe 100%
+            );
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 20s infinite;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header with gradient text */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            font-size: 3.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            animation: shimmer 3s infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            color: #888;
+            font-weight: 400;
+        }
+
+        /* Premium card */
+        .premium-card {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .premium-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 30px 80px rgba(102, 126, 234, 0.2);
+        }
+
+        /* Tab navigation - Gemini style */
+        .nav-pills {
+            display: flex;
+            gap: 12px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-pill {
+            flex: 1;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            color: #888;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .nav-pill:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e3e3e3;
+        }
+
+        .nav-pill.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-pill-icon {
+            font-size: 1.3em;
+        }
+
+        /* Input fields - Gemini style */
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 12px;
+            color: #b8b8b8;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            color: #e3e3e3;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            resize: vertical;
+        }
+
+        textarea {
+            min-height: 140px;
+        }
+
+        textarea:focus, input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea::placeholder, input::placeholder {
+            color: #555;
+        }
+
+        /* Options grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        select {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #e3e3e3;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Premium button with gradient */
+        .generate-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .generate-btn:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Loading animation - Gemini style */
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-container.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .dots-loader {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .loading-text {
+            color: #888;
+            font-size: 1em;
+        }
+
+        /* Result card */
+        .result-card {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(102, 126, 234, 0.05);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            animation: slideIn 0.5s ease;
+        }
+
+        .result-card.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .result-content {
+            line-height: 1.8;
+            color: #e3e3e3;
+            white-space: pre-wrap;
+            font-size: 1.05em;
+        }
+
+        .result-meta {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 24px;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .result-image {
+            width: 100%;
+            border-radius: 16px;
+            margin-top: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Services grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .service-card {
+            padding: 28px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-card.available {
+            border-color: rgba(82, 196, 26, 0.3);
+        }
+
+        .service-card.unavailable {
+            border-color: rgba(255, 77, 79, 0.3);
+            opacity: 0.6;
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .service-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #e3e3e3;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .status-badge.available {
+            background: rgba(82, 196, 26, 0.2);
+            color: #52c41a;
+        }
+
+        .status-badge.unavailable {
+            background: rgba(255, 77, 79, 0.2);
+            color: #ff4d4f;
+        }
+
+        .service-desc {
+            color: #888;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* Tab content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5em; }
+            .premium-card { padding: 24px; }
+            .nav-pills { flex-direction: column; }
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .fade-in:nth-child(1) { animation-delay: 0.1s; }
+        .fade-in:nth-child(2) { animation-delay: 0.2s; }
+        .fade-in:nth-child(3) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="gradient-bg"></div>
+
+    <!-- Floating particles -->
+    <script>
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            document.body.appendChild(particle);
+        }
+    </script>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">✨ AI Orchestrator</div>
+            <div class="tagline">Multiple AI models, unified interface</div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-pills fade-in">
+            <button class="nav-pill active" onclick="switchTab('text')">
+                <span class="nav-pill-icon">💬</span>
+                <span>Text</span>
+            </button>
+            <button class="nav-pill" onclick="switchTab('image')">
+                <span class="nav-pill-icon">🎨</span>
+                <span>Image</span>
+            </button>
+            <button class="nav-pill" onclick="switchTab('services')">
+                <span class="nav-pill-icon">⚡</span>
+                <span>Services</span>
+            </button>
+        </div>
+
+        <!-- Text Generation Tab -->
+        <div id="text" class="tab-content active">
+            <div class="premium-card fade-in">
+                <div class="input-group">
+                    <label class="input-label">What would you like me to create?</label>
+                    <textarea id="textPrompt" placeholder="Try something like:
+• Amake ekta golpo bolo
+• Write a haiku about AI
+• Banglay ekta kobita likho
+
+I understand both Bangla and English! 🌟"></textarea>
+                </div>
+
+                <div class="options-grid">
+                    <div class="input-group">
+                        <label class="input-label">Length</label>
+                        <select id="textTokens">
+                            <option value="150">Short (150 tokens)</option>
+                            <option value="300" selected>Medium (300 tokens)</option>
+                            <option value="500">Long (500 tokens)</option>
+                            <option value="1000">Very Long (1000 tokens)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Creativity</label>
+                        <select id="textTemp">
+                            <option value="0.3">Focused</option>
+                            <option value="0.7" selected>Balanced</option>
+                            <option value="1.0">Creative</option>
+                            <option value="1.5">Very Creative</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="generate-btn" onclick="generateText()">
+                    ✨ Generate Text
+                </button>
+
+                <div class="loading-container" id="textLoading">
+                    <div class="dots-loader">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="loading-text">Creating your content...</div>
+                </div>
+
+                <div class="result-card" id="textResult">
+                    <div class="result-header">
+                        <span>✨</span>
+                        <span>Generated Content</span>
+                    </div>
+                    <div class="result-content" id="textOutput"></div>
+                    <div class="result-meta">
+                        <span>🤖 <strong>Model:</strong> <span id="textModel"></span></span>
+                        <span>📊 <strong>Tokens:</strong> <span id="textTokensUsed"></span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Generation Tab -->
+        <div id="image" class="tab-content">
+            <div class="premium-card fade-in">
+                <div class="input-group">
+                    <label class="input-label">Describe your image</label>
+                    <input type="text" id="imagePrompt" placeholder="Try: cute orange cat sitting on a chair, photorealistic, 4K quality">
+                </div>
+
+                <div class="options-grid">
+                    <div class="input-group">
+                        <label class="input-label">Size</label>
+                        <select id="imageSize">
+                            <option value="512x512">Small (512×512)</option>
+                            <option value="1024x1024" selected>Medium (1024×1024)</option>
+                            <option value="1536x1536">Large (1536×1536)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="generate-btn" onclick="generateImage()">
+                    🎨 Generate Image
+                </button>
+
+                <div class="loading-container" id="imageLoading">
+                    <div class="dots-loader">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="loading-text">Generating your image (5-10 seconds)...</div>
+                </div>
+
+                <div class="result-card" id="imageResult">
+                    <div class="result-header">
+                        <span>🎨</span>
+                        <span>Your Creation</span>
+                    </div>
+                    <img id="imageOutput" class="result-image" alt="Generated image">
+                    <div class="result-meta">
+                        <span>🚀 <strong>Service:</strong> <span id="imageService"></span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services Tab -->
+        <div id="services" class="tab-content">
+            <div class="premium-card fade-in">
+                <button class="generate-btn" onclick="loadServices()" style="margin-bottom: 30px;">
+                    🔄 Refresh Status
+                </button>
+
+                <div class="services-grid" id="servicesGrid">
+                    <div style="text-align: center; grid-column: 1/-1;">
+                        <div class="dots-loader" style="display: inline-flex;">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-pill').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tab).classList.add('active');
+            event.target.closest('.nav-pill').classList.add('active');
+
+            if (tab === 'services') {
+                loadServices();
+            }
+        }
+
+        async function generateText() {
+            const prompt = document.getElementById('textPrompt').value.trim();
+            if (!prompt) {
+                alert('Please enter a prompt!');
+                return;
+            }
+
+            const loading = document.getElementById('textLoading');
+            const result = document.getElementById('textResult');
+            const button = event.target;
+
+            button.disabled = true;
+            loading.classList.add('show');
+            result.classList.remove('show');
+
+            try {
+                const response = await fetch(`${API_BASE}/generate/text`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        max_tokens: parseInt(document.getElementById('textTokens').value),
+                        temperature: parseFloat(document.getElementById('textTemp').value)
+                    })
+                });
+
+                const data = await response.json();
+
+                document.getElementById('textOutput').textContent = data.text;
+                document.getElementById('textModel').textContent = data.model;
+                document.getElementById('textTokensUsed').textContent = data.tokens_used;
+
+                result.classList.add('show');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                loading.classList.remove('show');
+                button.disabled = false;
+            }
+        }
+
+        async function generateImage() {
+            const prompt = document.getElementById('imagePrompt').value.trim();
+            if (!prompt) {
+                alert('Please enter a prompt!');
+                return;
+            }
+
+            const loading = document.getElementById('imageLoading');
+            const result = document.getElementById('imageResult');
+            const button = event.target;
+
+            button.disabled = true;
+            loading.classList.add('show');
+            result.classList.remove('show');
+
+            try {
+                const response = await fetch(`${API_BASE}/generate/image`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        size: document.getElementById('imageSize').value,
+                        num_images: 1
+                    })
+                });
+
+                const data = await response.json();
+
+                document.getElementById('imageOutput').src = data.image_url;
+                document.getElementById('imageService').textContent = data.service;
+
+                result.classList.add('show');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                loading.classList.remove('show');
+                button.disabled = false;
+            }
+        }
+
+        async function loadServices() {
+            const grid = document.getElementById('servicesGrid');
+            grid.innerHTML = '<div style="text-align: center; grid-column: 1/-1;"><div class="dots-loader" style="display: inline-flex;"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/services`);
+                const services = await response.json();
+
+                grid.innerHTML = services.map(service => `
+                    <div class="service-card ${service.status}">
+                        <div class="service-header">
+                            <div class="service-name">${service.name}</div>
+                            <div class="status-badge ${service.status}">
+                                ${service.status === 'available' ? '✓ Online' : '○ Offline'}
+                            </div>
+                        </div>
+                        <div class="service-desc">${service.description}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                grid.innerHTML = '<div style="text-align: center; color: #ff4d4f; grid-column: 1/-1;">Failed to load services</div>';
+            }
+        }
+    </script>
+</body>
+</html>
